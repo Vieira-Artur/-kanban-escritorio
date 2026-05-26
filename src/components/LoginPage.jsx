@@ -3,9 +3,9 @@ export default function LoginPage({ onLogin }) {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-sm text-center">
         <div className="w-14 h-14 bg-brand-900 rounded-xl flex items-center justify-center mx-auto mb-6">
-          <span className="text-white font-extrabold text-xl">AP</span>
+          <span className="text-white font-extrabold text-xl">AV</span>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">APVasconcelos</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Artur Vieira</h1>
         <p className="text-gray-500 text-sm mb-8">Sistema de Gestão de Tarefas</p>
         <button
           onClick={onLogin}
