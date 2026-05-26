@@ -8,9 +8,9 @@ export default function TopBar({ workspace, onWorkspaceChange, onSearch, user, i
       {/* Logo */}
       <div className="flex items-center gap-2 mr-2">
         <div className="w-7 h-7 bg-brand-900 rounded-md flex items-center justify-center">
-          <span className="text-white text-xs font-extrabold">AP</span>
+          <span className="text-white text-xs font-extrabold">AV</span>
         </div>
-        <span className="text-sm font-bold text-brand-900 hidden sm:block">Vasconcelos</span>
+        <span className="text-sm font-bold text-brand-900 hidden sm:block">Artur Vieira</span>
       </div>
 
       {/* Workspace tabs */}
