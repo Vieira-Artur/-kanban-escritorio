@@ -24,17 +24,17 @@ export default function TaskCard({ task, onClick, index }) {
           {/* Tags */}
           <div className="flex flex-wrap gap-1 mb-2">
             {task.client && (
-              <span className="text-[10px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
+              <span className="text-xs font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
                 {task.client}
               </span>
             )}
             {task.processNumber && (
-              <span className="text-[10px] font-semibold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
+              <span className="text-xs font-semibold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
                 Nº {task.processNumber}
               </span>
             )}
             {task.opposingParty && (
-              <span className="text-[10px] font-semibold bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">
+              <span className="text-xs font-semibold bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">
                 {task.opposingParty}
               </span>
             )}
@@ -42,11 +42,11 @@ export default function TaskCard({ task, onClick, index }) {
 
           {/* Footer */}
           <div className="flex items-center gap-2 mt-1 pt-2 border-t border-gray-50">
-            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${priorityColor(task.priority)}`}>
+            <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${priorityColor(task.priority)}`}>
               {priorityLabel(task.priority)}
             </span>
             {task.deadline && (
-              <span className={`text-[10px] ml-auto ${overdue ? 'text-red-600 font-semibold' : 'text-gray-400'}`}>
+              <span className={`text-xs ml-auto ${overdue ? 'text-red-600 font-semibold' : 'text-gray-400'}`}>
                 📅 {formatDate(deadlineMs)}
               </span>
             )}

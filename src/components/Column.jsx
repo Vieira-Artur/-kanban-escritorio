@@ -10,8 +10,8 @@ export default function Column({ column, tasks, onTaskClick, isReview = false })
           className="w-2.5 h-2.5 rounded-full shrink-0"
           style={{ backgroundColor: column.color }}
         />
-        <span className="text-xs font-bold text-gray-700">{column.name}</span>
-        <span className="ml-auto text-[10px] font-semibold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full">
+        <span className="text-sm font-bold text-gray-700">{column.name}</span>
+        <span className="ml-auto text-xs font-semibold bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full">
           {tasks.length}
         </span>
       </div>

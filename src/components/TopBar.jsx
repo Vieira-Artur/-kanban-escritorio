@@ -4,13 +4,13 @@ export default function TopBar({ workspace, onWorkspaceChange, onSearch, user, i
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="h-12 bg-white border-b border-gray-200 flex items-center px-5 gap-4 shrink-0">
+    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-5 gap-4 shrink-0">
       {/* Logo */}
       <div className="flex items-center gap-2 mr-2">
-        <div className="w-7 h-7 bg-brand-900 rounded-md flex items-center justify-center">
-          <span className="text-white text-xs font-extrabold">AV</span>
+        <div className="w-8 h-8 bg-brand-900 rounded-md flex items-center justify-center">
+          <span className="text-white text-sm font-extrabold">AV</span>
         </div>
-        <span className="text-sm font-bold text-brand-900 hidden sm:block">Artur Vieira</span>
+        <span className="text-base font-bold text-brand-900 hidden sm:block">Artur Vieira</span>
       </div>
 
       {/* Workspace tabs */}
@@ -22,7 +22,7 @@ export default function TopBar({ workspace, onWorkspaceChange, onSearch, user, i
           <button
             key={id}
             onClick={() => onWorkspaceChange(id)}
-            className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+            className={`px-3 py-1 rounded-full text-sm font-semibold transition-colors ${
               workspace === id
                 ? 'bg-brand-50 text-brand-700'
                 : 'text-gray-500 hover:text-gray-800'
@@ -39,7 +39,7 @@ export default function TopBar({ workspace, onWorkspaceChange, onSearch, user, i
           type="search"
           placeholder="Buscar tarefa, cliente..."
           onChange={e => onSearch(e.target.value)}
-          className="w-full text-xs px-3 py-1.5 bg-gray-100 rounded-lg border-none outline-none focus:ring-2 focus:ring-brand-900/20"
+          className="w-full text-sm px-3 py-1.5 bg-gray-100 rounded-lg border-none outline-none focus:ring-2 focus:ring-brand-900/20"
         />
       </div>
 
