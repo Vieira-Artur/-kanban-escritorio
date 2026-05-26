@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthorized() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/authorizedEmails/$(request.auth.token.email));
+    }
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email == 'carellievieira.adv@gmail.com';
+    }
+
+    match /authorizedEmails/{email} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAdmin();
+    }
+
+    match /workspaces/{workspace}/{document=**} {
+      allow read, write: if isAuthorized();
+    }
+  }
+}
