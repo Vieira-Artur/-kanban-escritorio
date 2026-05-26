@@ -80,24 +80,10 @@ export async function addComment(workspace, taskId, { text, authorId, authorName
   })
 }
 
-// ── Attachments ──────────────────────────────────────────────────────────────
-
-export async function addAttachment(workspace, taskId, { name, url, size, contentType, uploadedBy }) {
-  const ref = collection(db, 'workspaces', workspace, 'tasks', taskId, 'attachments')
-  return addDoc(ref, {
-    name,
-    url,
-    size,
-    contentType,
-    uploadedBy,
-    uploadedAt: serverTimestamp(),
-  })
-}
-
 // ── User profile ─────────────────────────────────────────────────────────────
 
 export async function upsertUser(user) {
-  const ADMIN_EMAIL = 'arturapv@gmail.com'
+  const ADMIN_EMAIL = 'carellievieira.adv@gmail.com'
   const ref = doc(db, 'users', user.uid)
   await setDoc(ref, {
     email: user.email,

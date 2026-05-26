@@ -9,7 +9,7 @@ export function useAuth() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const ADMIN_EMAIL = 'arturapv@gmail.com'
+  const ADMIN_EMAIL = 'carellievieira.adv@gmail.com'
 
   useEffect(() => {
     return onAuthStateChanged(auth, async (firebaseUser) => {
