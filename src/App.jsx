@@ -25,7 +25,7 @@ function AuthGuard({ children, requireAdmin = false }) {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/kanban-escritorio">
+    <BrowserRouter basename="/-kanban-escritorio">
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Carregando...</div>}>
         <Routes>
           <Route path="/" element={
