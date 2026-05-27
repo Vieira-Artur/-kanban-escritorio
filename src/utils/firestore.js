@@ -26,19 +26,37 @@ export async function removeAuthorizedEmail(email) {
 // ── Columns ──────────────────────────────────────────────────────────────────
 
 const DEFAULT_COLUMNS = [
-  { name: 'A Fazer',             color: '#6366f1', order: 0 },
-  { name: 'Em Andamento',        color: '#f59e0b', order: 1 },
-  { name: 'Aguardando Revisão',  color: '#3b82f6', order: 2 },
-  { name: 'Concluído',           color: '#10b981', order: 3 },
+  { name: 'A Fazer',            color: '#6366f1', order: 0 },
+  { name: 'Em Andamento',       color: '#f59e0b', order: 1 },
+  { name: 'Aguardando Revisão', color: '#3b82f6', order: 2 },
+  { name: 'Pronto p/ Envio',    color: '#8b5cf6', order: 3 },
+  { name: 'Concluído',          color: '#10b981', order: 4 },
 ]
 
 export async function seedColumnsIfEmpty(workspace) {
   const colRef = collection(db, 'workspaces', workspace, 'columns')
   const snap = await getDocs(colRef)
-  if (!snap.empty) return
+
+  if (snap.empty) {
+    const batch = writeBatch(db)
+    DEFAULT_COLUMNS.forEach(col => batch.set(doc(colRef), col))
+    await batch.commit()
+    return
+  }
+
+  // Migrate: add missing columns and fix order of existing ones
+  const existing = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+  const existingNames = new Set(existing.map(c => c.name))
+  const missing = DEFAULT_COLUMNS.filter(c => !existingNames.has(c.name))
+  if (missing.length === 0) return
+
   const batch = writeBatch(db)
-  DEFAULT_COLUMNS.forEach(col => {
-    batch.set(doc(colRef), col)
+  missing.forEach(col => batch.set(doc(colRef), col))
+  existing.forEach(col => {
+    const canonical = DEFAULT_COLUMNS.find(d => d.name === col.name)
+    if (canonical && col.order !== canonical.order) {
+      batch.update(doc(colRef, col.id), { order: canonical.order })
+    }
   })
   await batch.commit()
 }

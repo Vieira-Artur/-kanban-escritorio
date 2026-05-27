@@ -2,6 +2,7 @@ const ABBREV = {
   'A Fazer': 'A Fazer',
   'Em Andamento': 'Andamento',
   'Aguardando Revisão': 'Revisão',
+  'Pronto p/ Envio': 'P/ Envio',
   'Concluído': 'Concluído',
 }
 
