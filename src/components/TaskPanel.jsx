@@ -3,6 +3,8 @@ import { useTask } from '../hooks/useTask.js'
 import { formatDate } from '../utils/formatters.js'
 import CommentSection from './CommentSection.jsx'
 
+const CLIENTS = ['Vereda', 'Sergio', 'Loppas', 'Aliria']
+
 const PRIORITIES = [
   { value: 'alta',  label: 'Alta' },
   { value: 'media', label: 'Média' },
@@ -136,11 +138,15 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Cliente *</label>
                 <input
                   required
+                  list="clients-list"
                   value={form.client}
                   onChange={set('client')}
                   placeholder="Nome do cliente"
                   className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
                 />
+                <datalist id="clients-list">
+                  {CLIENTS.map(c => <option key={c} value={c} />)}
+                </datalist>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">Parte contrária</label>
