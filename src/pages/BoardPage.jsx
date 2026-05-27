@@ -27,6 +27,8 @@ export default function BoardPage() {
   // Aba ativa padrão: primeira coluna quando carregadas
   const resolvedActiveColumnId = activeColumnId ?? columns[0]?.id
 
+  const boardBg = workspace === 'docencia' ? 'bg-stone-100' : 'bg-slate-100'
+
   function handleWorkspaceChange(ws) {
     setWorkspace(ws)
     setActiveColumnId(null)
@@ -39,7 +41,7 @@ export default function BoardPage() {
   )
 
   return (
-    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
+    <div className={`h-screen flex flex-col ${boardBg} overflow-hidden`}>
       <TopBar
         workspace={workspace}
         onWorkspaceChange={handleWorkspaceChange}
@@ -58,7 +60,7 @@ export default function BoardPage() {
         </div>
       )}
 
-      <FilterBar filter={filter} onFilterChange={setFilter} />
+      <FilterBar filter={filter} onFilterChange={setFilter} bgClass={boardBg} />
 
       <ColumnTabs
         columns={columns}
