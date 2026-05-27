@@ -29,7 +29,7 @@ export default function BoardPage() {
   )
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
+    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
       <TopBar
         workspace={workspace}
         onWorkspaceChange={setWorkspace}
