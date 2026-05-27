@@ -38,11 +38,9 @@ export default function TaskCard({ task, onClick, index }) {
                 Nº {task.processNumber}
               </span>
             )}
-            {task.isIntern && (
-              <span className="text-xs font-semibold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">
-                👤 Estagiário
-              </span>
-            )}
+            <span className="text-xs font-semibold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">
+              👤 {task.isIntern ? 'Estagiário' : 'Artur Vieira'}
+            </span>
           </div>
 
           {/* Footer */}
