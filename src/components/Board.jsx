@@ -36,18 +36,15 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="flex gap-4 overflow-x-auto p-4 sm:p-5 h-full">
         {columns.map(col => (
-          <div
+          <Column
             key={col.id}
-            className={col.id !== activeColumnId ? 'hidden sm:flex' : 'flex'}
-          >
-            <Column
-              column={col}
-              tasks={getFilteredTasks(col.id)}
-              onTaskClick={onTaskClick}
-              onAddTask={onAddTask}
-              isReview={col.name === REVIEW_COLUMN_NAME}
-            />
-          </div>
+            column={col}
+            tasks={getFilteredTasks(col.id)}
+            onTaskClick={onTaskClick}
+            onAddTask={onAddTask}
+            isReview={col.name === REVIEW_COLUMN_NAME}
+            className={col.id !== activeColumnId ? 'hidden sm:block' : ''}
+          />
         ))}
       </div>
     </DragDropContext>
