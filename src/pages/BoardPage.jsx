@@ -56,6 +56,7 @@ export default function BoardPage() {
           columns={columns}
           tasksForColumn={tasksForColumn}
           onTaskClick={setSelectedTask}
+          onAddTask={columnId => setCreatingInColumn(columnId)}
           filter={filter}
           searchQuery={searchQuery}
           currentUserId={user?.uid}

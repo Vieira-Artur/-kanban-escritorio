@@ -1,7 +1,7 @@
 import { Droppable } from '@hello-pangea/dnd'
 import TaskCard from './TaskCard.jsx'
 
-export default function Column({ column, tasks, onTaskClick, isReview = false }) {
+export default function Column({ column, tasks, onTaskClick, onAddTask, isReview = false }) {
   return (
     <div className={`flex flex-col min-w-[260px] w-[260px] ${isReview ? 'bg-blue-50/50 rounded-xl' : ''}`}>
       {/* Column header */}
@@ -32,7 +32,10 @@ export default function Column({ column, tasks, onTaskClick, isReview = false })
             {provided.placeholder}
 
             {/* Add task hint */}
-            <button className="text-xs text-gray-400 hover:text-brand-700 py-2 text-center rounded-lg hover:bg-blue-50 transition-colors mt-1">
+            <button
+              onClick={() => onAddTask?.(column.id)}
+              className="text-xs text-gray-400 hover:text-brand-700 py-2 text-center rounded-lg hover:bg-blue-50 transition-colors mt-1"
+            >
               + Adicionar tarefa
             </button>
           </div>

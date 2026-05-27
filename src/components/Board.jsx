@@ -2,7 +2,7 @@ import { DragDropContext } from '@hello-pangea/dnd'
 import Column from './Column.jsx'
 import { moveTask } from '../utils/firestore.js'
 
-export default function Board({ workspace, columns, tasksForColumn, onTaskClick, filter, searchQuery, currentUserId }) {
+export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUserId }) {
   async function handleDragEnd(result) {
     const { destination, source, draggableId } = result
     if (!destination) return
@@ -41,6 +41,7 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
             column={col}
             tasks={getFilteredTasks(col.id)}
             onTaskClick={onTaskClick}
+            onAddTask={onAddTask}
             isReview={col.name === REVIEW_COLUMN_NAME}
           />
         ))}
