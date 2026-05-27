@@ -82,6 +82,11 @@ export async function addComment(workspace, taskId, { text, authorId, authorName
 
 // ── User profile ─────────────────────────────────────────────────────────────
 
+export async function getUsers() {
+  const snap = await getDocs(collection(db, 'users'))
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
 export async function upsertUser(user) {
   const ADMIN_EMAIL = 'carellievieira.adv@gmail.com'
   const ref = doc(db, 'users', user.uid)

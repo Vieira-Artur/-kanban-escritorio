@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTask } from '../hooks/useTask.js'
 import { formatDate } from '../utils/formatters.js'
+import { getUsers } from '../utils/firestore.js'
 import CommentSection from './CommentSection.jsx'
 
 const CLIENTS = ['Vereda', 'Sergio', 'Loppas', 'Aliria']
@@ -30,6 +31,11 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
   })
 
   const { comments, loading, save, remove } = useTask(workspace, task?.id)
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    getUsers().then(setUsers).catch(() => {})
+  }, [])
 
   function set(field) {
     return e => setForm(f => ({ ...f, [field]: e.target.value }))
@@ -128,6 +134,23 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
               >
                 {columns.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Responsible */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Responsável *</label>
+              <select
+                value={form.assignedTo}
+                onChange={set('assignedTo')}
+                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
+              >
+                <option value="">Selecione...</option>
+                {users.map(u => (
+                  <option key={u.id} value={u.id}>
+                    {u.displayName || u.email}
+                  </option>
                 ))}
               </select>
             </div>
