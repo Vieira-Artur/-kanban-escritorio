@@ -2,7 +2,7 @@ import { DragDropContext } from '@hello-pangea/dnd'
 import Column from './Column.jsx'
 import { moveTask } from '../utils/firestore.js'
 
-export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUserId }) {
+export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUserId, activeColumnId }) {
   async function handleDragEnd(result) {
     const { destination, source, draggableId } = result
     if (!destination) return
@@ -34,16 +34,20 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto p-5 h-full">
+      <div className="flex gap-4 overflow-x-auto p-4 sm:p-5 h-full">
         {columns.map(col => (
-          <Column
+          <div
             key={col.id}
-            column={col}
-            tasks={getFilteredTasks(col.id)}
-            onTaskClick={onTaskClick}
-            onAddTask={onAddTask}
-            isReview={col.name === REVIEW_COLUMN_NAME}
-          />
+            className={col.id !== activeColumnId ? 'hidden sm:flex' : 'flex'}
+          >
+            <Column
+              column={col}
+              tasks={getFilteredTasks(col.id)}
+              onTaskClick={onTaskClick}
+              onAddTask={onAddTask}
+              isReview={col.name === REVIEW_COLUMN_NAME}
+            />
+          </div>
         ))}
       </div>
     </DragDropContext>
