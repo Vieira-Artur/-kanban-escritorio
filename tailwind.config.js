@@ -12,6 +12,9 @@ export default {
           900: '#1F497D',
         },
       },
+      fontFamily: {
+        sans: ['Outfit', 'sans-serif'],
+      },
     },
   },
   plugins: [],
