@@ -25,7 +25,12 @@ export default function TaskCard({ task, onClick, index }) {
           <div className="flex flex-wrap gap-1 mb-2">
             {task.client && (
               <span className="text-xs font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
-                {task.client}
+                Cliente: {task.client}
+              </span>
+            )}
+            {task.opposingParty && (
+              <span className="text-xs font-semibold bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">
+                Parte: {task.opposingParty}
               </span>
             )}
             {task.processNumber && (
@@ -33,9 +38,9 @@ export default function TaskCard({ task, onClick, index }) {
                 Nº {task.processNumber}
               </span>
             )}
-            {task.opposingParty && (
-              <span className="text-xs font-semibold bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">
-                {task.opposingParty}
+            {task.isIntern && (
+              <span className="text-xs font-semibold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">
+                👤 Estagiário
               </span>
             )}
           </div>
