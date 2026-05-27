@@ -94,13 +94,24 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">Prazo *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-gray-500">Prazo</label>
+                  <label className="flex items-center gap-1 text-xs text-gray-400 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={!form.deadline}
+                      onChange={e => setForm(f => ({ ...f, deadline: e.target.checked ? '' : new Date().toISOString().split('T')[0] }))}
+                      className="rounded"
+                    />
+                    Sem prazo
+                  </label>
+                </div>
                 <input
                   type="date"
-                  required
                   value={form.deadline}
                   onChange={set('deadline')}
-                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
+                  disabled={!form.deadline}
+                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20 disabled:bg-gray-50 disabled:text-gray-400"
                 />
               </div>
             </div>
