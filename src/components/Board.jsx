@@ -23,8 +23,8 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
       )
     }
 
-    if (filter === 'mine')   tasks = tasks.filter(t => t.assignedTo === currentUserId)
-    if (filter === 'intern') tasks = tasks.filter(t => t.assignedTo !== currentUserId)
+    if (filter === 'mine')   tasks = tasks.filter(t => !t.isIntern)
+    if (filter === 'intern') tasks = tasks.filter(t => t.isIntern)
     if (filter === 'urgent') tasks = tasks.filter(t => t.priority === 'alta')
 
     return tasks

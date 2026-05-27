@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTask } from '../hooks/useTask.js'
 import { formatDate } from '../utils/formatters.js'
-import { getUsers } from '../utils/firestore.js'
 import CommentSection from './CommentSection.jsx'
 
 const CLIENTS = ['Vereda', 'Sergio', 'Loppas', 'Aliria']
@@ -23,7 +22,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                       ? new Date(task.deadline?.toMillis?.() ?? task.deadline)
                           .toISOString().split('T')[0]
                       : '',
-    assignedTo:     task?.assignedTo     ?? currentUser?.uid ?? '',
+    isIntern:       task?.isIntern        ?? false,
     client:         task?.client         ?? '',
     opposingParty:  task?.opposingParty  ?? '',
     processNumber:  task?.processNumber  ?? '',
@@ -31,11 +30,6 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
   })
 
   const { comments, loading, save, remove } = useTask(workspace, task?.id)
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
-    getUsers().then(setUsers).catch(() => {})
-  }, [])
 
   function set(field) {
     return e => setForm(f => ({ ...f, [field]: e.target.value }))
@@ -46,6 +40,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
     await save({
       ...form,
       deadline: form.deadline ? new Date(form.deadline).getTime() : null,
+      isIntern: form.isIntern,
     })
     onClose()
   }
@@ -138,22 +133,16 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
               </select>
             </div>
 
-            {/* Responsible */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">Responsável *</label>
-              <select
-                value={form.assignedTo}
-                onChange={set('assignedTo')}
-                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
-              >
-                <option value="">Selecione...</option>
-                {users.map(u => (
-                  <option key={u.id} value={u.id}>
-                    {u.displayName || u.email}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Intern toggle */}
+            <label className="flex items-center gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={form.isIntern}
+                onChange={e => setForm(f => ({ ...f, isIntern: e.target.checked }))}
+                className="w-4 h-4 rounded accent-brand-900"
+              />
+              <span className="text-sm font-semibold text-gray-700">Tarefa do Estagiário</span>
+            </label>
 
             {/* Client + Opposing Party */}
             <div className="grid grid-cols-2 gap-3">
