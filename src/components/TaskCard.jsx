@@ -1,9 +1,10 @@
 import { Draggable } from '@hello-pangea/dnd'
-import { formatDate, priorityLabel, priorityColor, isOverdue } from '../utils/formatters.js'
+import { formatDate, priorityLabel, priorityColor, isOverdue, daysUntilDeadline } from '../utils/formatters.js'
 
 export default function TaskCard({ task, onClick, index, users = [] }) {
   const deadlineMs = task.deadline?.toMillis?.() ?? task.deadline
   const overdue = isOverdue(deadlineMs)
+  const days = daysUntilDeadline(deadlineMs)
   const assignee = users.find(u => u.uid === task.assignedTo)
   function initials(name) {
     return name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() ?? '?'
@@ -53,9 +54,19 @@ export default function TaskCard({ task, onClick, index, users = [] }) {
               {priorityLabel(task.priority)}
             </span>
             {task.deadline && (
-              <span className={`text-xs ${assignee ? '' : 'ml-auto'} ${overdue ? 'text-red-600 font-semibold' : 'text-gray-400'}`}>
-                📅 {formatDate(deadlineMs)}
-              </span>
+              overdue ? (
+                <span className={`text-xs font-semibold ${assignee ? '' : 'ml-auto'} text-red-600`}>
+                  🔴 Vencido · {formatDate(deadlineMs)}
+                </span>
+              ) : days !== null && days <= 2 ? (
+                <span className={`text-xs font-semibold ${assignee ? '' : 'ml-auto'} text-amber-600`}>
+                  ⚠️ {days === 0 ? 'Vence hoje' : days === 1 ? 'Vence amanhã' : `${days} dias`} · {formatDate(deadlineMs)}
+                </span>
+              ) : (
+                <span className={`text-xs ${assignee ? '' : 'ml-auto'} text-gray-400`}>
+                  📅 {formatDate(deadlineMs)}
+                </span>
+              )
             )}
             {assignee && (
               <span

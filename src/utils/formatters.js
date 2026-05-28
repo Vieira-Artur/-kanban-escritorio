@@ -20,3 +20,9 @@ export function isOverdue(timestamp) {
   if (!timestamp) return false
   return timestamp < Date.now()
 }
+
+export function daysUntilDeadline(timestamp) {
+  if (!timestamp) return null
+  const diff = timestamp - Date.now()
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+}
