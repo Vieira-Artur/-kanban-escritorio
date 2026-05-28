@@ -1,12 +1,21 @@
 import { DragDropContext } from '@hello-pangea/dnd'
 import Column from './Column.jsx'
-import { moveTask } from '../utils/firestore.js'
+import { moveTask, reorderTasks } from '../utils/firestore.js'
 
 export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUserId, activeColumnId, users }) {
   async function handleDragEnd(result) {
     const { destination, source, draggableId } = result
     if (!destination) return
-    if (destination.droppableId === source.droppableId) return
+
+    if (destination.droppableId === source.droppableId) {
+      if (destination.index === source.index) return
+      const colTasks = tasksForColumn(destination.droppableId)
+      const reordered = [...colTasks]
+      const [moved] = reordered.splice(source.index, 1)
+      reordered.splice(destination.index, 0, moved)
+      await reorderTasks(workspace, reordered.map(t => t.id))
+      return
+    }
 
     await moveTask(workspace, draggableId, destination.droppableId)
   }

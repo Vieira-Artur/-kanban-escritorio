@@ -85,6 +85,14 @@ export async function moveTask(workspace, taskId, newColumnId) {
   return updateTask(workspace, taskId, { columnId: newColumnId })
 }
 
+export async function reorderTasks(workspace, orderedIds) {
+  const batch = writeBatch(db)
+  orderedIds.forEach((id, index) => {
+    batch.update(doc(db, 'workspaces', workspace, 'tasks', id), { order: index })
+  })
+  await batch.commit()
+}
+
 // ── Comments ─────────────────────────────────────────────────────────────────
 
 export async function addComment(workspace, taskId, { text, authorId, authorName, authorPhoto }) {
