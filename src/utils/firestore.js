@@ -105,13 +105,14 @@ export async function getUsers() {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }))
 }
 
+const ADMIN_EMAILS = ['carellievieira.adv@gmail.com', 'arturapv@gmail.com']
+
 export async function upsertUser(user) {
-  const ADMIN_EMAIL = 'carellievieira.adv@gmail.com'
   const ref = doc(db, 'users', user.uid)
   await setDoc(ref, {
     email: user.email,
     displayName: user.displayName,
     photoURL: user.photoURL ?? '',
-    role: user.email === ADMIN_EMAIL ? 'admin' : 'member',
+    role: ADMIN_EMAILS.includes(user.email) ? 'admin' : 'member',
   }, { merge: true })
 }
