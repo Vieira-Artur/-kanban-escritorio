@@ -9,7 +9,7 @@ export function useAuth() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const ADMIN_EMAIL = 'carellievieira.adv@gmail.com'
+  const ADMIN_EMAILS = ['carellievieira.adv@gmail.com', 'arturapv@gmail.com']
 
   useEffect(() => {
     return onAuthStateChanged(auth, async (firebaseUser) => {
@@ -24,7 +24,7 @@ export function useAuth() {
       await upsertUser(firebaseUser)
       setUser(firebaseUser)
       setIsAuthorized(authorized)
-      setIsAdmin(firebaseUser.email === ADMIN_EMAIL)
+      setIsAdmin(ADMIN_EMAILS.includes(firebaseUser.email))
       setLoading(false)
     })
   }, [])
