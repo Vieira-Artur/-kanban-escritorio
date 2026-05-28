@@ -26,7 +26,7 @@ export async function removeAuthorizedEmail(email) {
 // ── Columns ──────────────────────────────────────────────────────────────────
 
 const DEFAULT_COLUMNS = [
-  { name: 'A Fazer',            color: '#6366f1', order: 0 },
+  { name: 'A Fazer',            color: '#eab308', order: 0 },
   { name: 'Em Andamento',       color: '#f59e0b', order: 1 },
   { name: 'Aguardando Revisão', color: '#3b82f6', order: 2 },
   { name: 'Pronto p/ Envio',    color: '#8b5cf6', order: 3 },
@@ -44,18 +44,21 @@ export async function seedColumnsIfEmpty(workspace) {
     return
   }
 
-  // Migrate: add missing columns and fix order of existing ones
+  // Migrate: add missing columns and sync order + color of existing ones
   const existing = snap.docs.map(d => ({ id: d.id, ...d.data() }))
   const existingNames = new Set(existing.map(c => c.name))
   const missing = DEFAULT_COLUMNS.filter(c => !existingNames.has(c.name))
-  if (missing.length === 0) return
 
   const batch = writeBatch(db)
   missing.forEach(col => batch.set(doc(colRef), col))
   existing.forEach(col => {
     const canonical = DEFAULT_COLUMNS.find(d => d.name === col.name)
-    if (canonical && col.order !== canonical.order) {
-      batch.update(doc(colRef, col.id), { order: canonical.order })
+    if (!canonical) return
+    const updates = {}
+    if (col.order !== canonical.order) updates.order = canonical.order
+    if (col.color !== canonical.color) updates.color = canonical.color
+    if (Object.keys(updates).length > 0) {
+      batch.update(doc(colRef, col.id), updates)
     }
   })
   await batch.commit()
