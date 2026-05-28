@@ -8,6 +8,7 @@ import Board from '../components/Board.jsx'
 import FilterBar from '../components/FilterBar.jsx'
 import TaskPanel from '../components/TaskPanel.jsx'
 import ColumnTabs from '../components/ColumnTabs.jsx'
+import BoardSkeleton from '../components/BoardSkeleton.jsx'
 
 export default function BoardPage() {
   const { user, isAdmin, logout } = useAuth()
@@ -36,11 +37,7 @@ export default function BoardPage() {
     setActiveColumnId(null)
   }
 
-  if (loading) return (
-    <div className="h-screen flex items-center justify-center text-gray-400 text-sm">
-      Carregando...
-    </div>
-  )
+  if (loading) return <BoardSkeleton />
 
   return (
     <div className={`h-screen flex flex-col ${boardBg} overflow-hidden`}>
