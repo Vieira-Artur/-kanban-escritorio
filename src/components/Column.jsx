@@ -1,7 +1,7 @@
 import { Droppable } from '@hello-pangea/dnd'
 import TaskCard from './TaskCard.jsx'
 
-export default function Column({ column, tasks, onTaskClick, onAddTask, isReview = false, className = '' }) {
+export default function Column({ column, tasks, onTaskClick, onAddTask, isReview = false, className = '', users = [] }) {
   return (
     <div className={`flex flex-col w-full sm:w-[260px] sm:min-w-[260px] ${className}`.trim()}>
       {/* Cabeçalho ACIMA da caixa branca */}
@@ -31,7 +31,7 @@ export default function Column({ column, tasks, onTaskClick, onAddTask, isReview
             }`}
           >
             {tasks.map((task, index) => (
-              <TaskCard key={task.id} task={task} onClick={onTaskClick} index={index} />
+              <TaskCard key={task.id} task={task} onClick={onTaskClick} index={index} users={users} />
             ))}
             {provided.placeholder}
 

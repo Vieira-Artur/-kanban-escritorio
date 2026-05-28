@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.js'
 import { useBoard } from '../hooks/useBoard.js'
+import { useUsers } from '../hooks/useUsers.js'
 import TopBar from '../components/TopBar.jsx'
 import Board from '../components/Board.jsx'
 import FilterBar from '../components/FilterBar.jsx'
@@ -20,6 +21,7 @@ export default function BoardPage() {
   const [activeColumnId, setActiveColumnId] = useState(null)
 
   const { columns, tasks, loading, tasksForColumn } = useBoard(workspace)
+  const { users } = useUsers()
 
   const reviewColumn = columns.find(c => c.name === 'Aguardando Revisão')
   const reviewCount = reviewColumn ? tasksForColumn(reviewColumn.id).length : 0
@@ -80,6 +82,7 @@ export default function BoardPage() {
           searchQuery={searchQuery}
           currentUserId={user?.uid}
           activeColumnId={resolvedActiveColumnId}
+          users={users}
         />
       </div>
 
@@ -90,6 +93,7 @@ export default function BoardPage() {
           columnId={creatingInColumn}
           columns={columns}
           currentUser={user}
+          users={users}
           onClose={() => { setSelectedTask(null); setCreatingInColumn(null) }}
         />
       )}
