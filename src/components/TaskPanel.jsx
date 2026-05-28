@@ -11,7 +11,7 @@ const PRIORITIES = [
   { value: 'baixa', label: 'Baixa' },
 ]
 
-export default function TaskPanel({ workspace, task, columnId, columns, currentUser, onClose }) {
+export default function TaskPanel({ workspace, task, columnId, columns, currentUser, users = [], onClose }) {
   const isNew = !task
 
   const [form, setForm] = useState({
@@ -117,6 +117,22 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                   className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20 disabled:bg-gray-50 disabled:text-gray-400"
                 />
               </div>
+            </div>
+
+            {/* Responsável */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Responsável *</label>
+              <select
+                required
+                value={form.assignedTo}
+                onChange={set('assignedTo')}
+                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
+              >
+                <option value="" disabled>Selecione um responsável</option>
+                {users.map(u => (
+                  <option key={u.uid} value={u.uid}>{u.displayName}</option>
+                ))}
+              </select>
             </div>
 
             {/* Column */}
