@@ -1,0 +1,96 @@
+<h2>Design da Interface</h2>
+<p class="subtitle">Como os dois recursos ficam no painel de tarefa e nos comentários</p>
+
+<div class="section">
+  <h3>1 — Campo "Responsável" no painel de tarefa</h3>
+  <div class="mockup">
+    <div class="mockup-header">TaskPanel — seção de campos</div>
+    <div class="mockup-body" style="font-family: sans-serif; font-size: 12px; display: flex; flex-direction: column; gap: 12px;">
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Prioridade *</div>
+          <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 10px; background: white; color: #334155; display: flex; justify-content: space-between; align-items: center;">
+            Alta <span style="color: #94a3b8;">▾</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Prazo *</div>
+          <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 10px; background: white; color: #334155;">
+            30/06/2026
+          </div>
+        </div>
+      </div>
+
+      <!-- Responsável — novo campo -->
+      <div>
+        <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Responsável *</div>
+        <div style="border: 1.5px solid #1F497D; border-radius: 8px; padding: 7px 10px; background: #eff6ff; color: #1F497D; display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background: #1F497D; color: white; font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center; shrink: 0;">ES</div>
+          <span style="font-weight: 600; flex: 1;">Estagiário</span>
+          <span style="color: #94a3b8;">▾</span>
+        </div>
+        <!-- Dropdown aberto -->
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: white; margin-top: 2px; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #eff6ff; border-left: 3px solid #1F497D;">
+            <div style="width: 22px; height: 22px; border-radius: 50%; background: #64748b; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center;">ES</div>
+            <div style="font-size: 12px; font-weight: 600; color: #1e293b;">Estagiário</div>
+            <div style="margin-left: auto; color: #1F497D; font-size: 12px;">✓</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-left: 3px solid transparent;">
+            <div style="width: 22px; height: 22px; border-radius: 50%; background: #1F497D; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center;">AV</div>
+            <div style="font-size: 12px; font-weight: 600; color: #1e293b;">Artur Vieira</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2 — @mention nos comentários (chips + destaque pós-envio)</h3>
+  <div class="mockup">
+    <div class="mockup-header">CommentSection</div>
+    <div class="mockup-body" style="font-family: sans-serif; font-size: 12px; display: flex; flex-direction: column; gap: 10px;">
+
+      <!-- Comentário já postado com @mention destacado -->
+      <div style="display: flex; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #1F497D; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">AV</div>
+        <div>
+          <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 3px;">
+            <span style="font-size: 11px; font-weight: 700; color: #1e293b;">Artur Vieira</span>
+            <span style="font-size: 10px; color: #94a3b8;">28/05/2026</span>
+          </div>
+          <div style="font-size: 12px; color: #334155; background: #f8fafc; border-radius: 8px; padding: 7px 10px;">
+            Favor revisar os documentos até sexta. <span style="background: #dbeafe; color: #1d4ed8; border-radius: 4px; padding: 1px 5px; font-weight: 600;">@Estagiário</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #f1f5f9; padding-top: 10px;">
+        <!-- Campo de novo comentário com chips aparecendo -->
+        <div style="display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px;">
+          <div style="flex: 1; border: 1.5px solid #1F497D; border-radius: 8px; padding: 7px 10px; font-size: 12px; color: #334155; background: white;">
+            Confirm que recebeu <span style="color: #1d4ed8; font-weight: 600;">@</span><span style="display: inline-block; width: 1px; height: 12px; background: #1F497D; vertical-align: middle;"></span>
+          </div>
+          <button style="background: #1F497D; color: white; border: none; border-radius: 8px; padding: 7px 12px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; align-self: flex-start;">Enviar</button>
+        </div>
+        <!-- Chips de menção abaixo do campo -->
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 5px; background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 20px; padding: 3px 10px; cursor: pointer; font-size: 11px; color: #1F497D; font-weight: 600;">
+            <div style="width: 16px; height: 16px; border-radius: 50%; background: #64748b; color: white; font-size: 7px; font-weight: 700; display: flex; align-items: center; justify-content: center;">ES</div>
+            @Estagiário
+          </div>
+          <div style="display: flex; align-items: center; gap: 5px; background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 3px 10px; cursor: pointer; font-size: 11px; color: #475569; font-weight: 600;">
+            <div style="width: 16px; height: 16px; border-radius: 50%; background: #1F497D; color: white; font-size: 7px; font-weight: 700; display: flex; align-items: center; justify-content: center;">AV</div>
+            @Artur Vieira
+          </div>
+        </div>
+        <div style="font-size: 10px; color: #94a3b8; margin-top: 6px;">Clique num chip para inserir a menção. Um e-mail será enviado automaticamente ao enviar.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top: 1rem;">Olhe no navegador e me diga se o visual faz sentido, ou o que mudaria.</p>

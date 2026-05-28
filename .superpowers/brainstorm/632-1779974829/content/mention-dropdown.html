@@ -1,0 +1,74 @@
+<h2>Como o @mention aparece no campo de comentário?</h2>
+<p class="subtitle">Quando você digita "@", um dropdown surge. Qual comportamento parece mais natural?</p>
+
+<div class="cards" style="margin-top: 1.5rem;">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 1rem; background: #f8fafc; border-radius: 6px; font-family: sans-serif;">
+      <div style="font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px;">💬 Comentários</div>
+      <div style="position: relative;">
+        <div style="display: flex; gap: 8px;">
+          <div style="flex: 1; border: 1.5px solid #1F497D; border-radius: 8px; padding: 7px 10px; font-size: 12px; color: #334155; background: white;">
+            Precisa revisar o contrato <span style="color: #1F497D; font-weight: 700;">@Art</span><span style="display: inline-block; width: 1px; height: 12px; background: #1F497D; margin-left: 1px; vertical-align: middle; animation: blink 1s infinite;"></span>
+          </div>
+          <button style="background: #1F497D; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 11px; font-weight: 600; cursor: pointer;">Enviar</button>
+        </div>
+        <!-- Dropdown -->
+        <div style="position: absolute; top: calc(100% + 4px); left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); min-width: 200px; overflow: hidden; z-index: 10;">
+          <div style="padding: 4px 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #eff6ff; cursor: pointer;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: #1F497D; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center;">AV</div>
+              <div>
+                <div style="font-size: 12px; font-weight: 600; color: #1e293b;">Artur Vieira</div>
+                <div style="font-size: 10px; color: #64748b;">arturapv@gmail.com</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding: 7px 12px; cursor: pointer;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: #64748b; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center;">ES</div>
+              <div>
+                <div style="font-size: 12px; font-weight: 600; color: #1e293b;">Estagiário</div>
+                <div style="font-size: 10px; color: #64748b;">estagiario@exemplo.com</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dropdown sobre o campo</h3>
+      <p>O popup aparece logo abaixo do cursor, filtrando conforme você digita. Clique num nome para inserir.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 1rem; background: #f8fafc; border-radius: 6px; font-family: sans-serif;">
+      <div style="font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px;">💬 Comentários</div>
+      <div style="display: flex; gap: 8px; align-items: flex-start;">
+        <div style="flex: 1;">
+          <div style="border: 1.5px solid #1F497D; border-radius: 8px; padding: 7px 10px; font-size: 12px; color: #334155; background: white; margin-bottom: 6px;">
+            Precisa revisar o contrato @<span style="display: inline-block; width: 1px; height: 12px; background: #1F497D; margin-left: 1px; vertical-align: middle;"></span>
+          </div>
+          <!-- chips abaixo do campo -->
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 5px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 20px; padding: 3px 10px; cursor: pointer; font-size: 11px; color: #1F497D; font-weight: 600;">
+              <div style="width: 16px; height: 16px; border-radius: 50%; background: #1F497D; color: white; font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center;">AV</div>
+              Artur Vieira
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 20px; padding: 3px 10px; cursor: pointer; font-size: 11px; color: #475569; font-weight: 600;">
+              <div style="width: 16px; height: 16px; border-radius: 50%; background: #64748b; color: white; font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center;">ES</div>
+              Estagiário
+            </div>
+          </div>
+        </div>
+        <button style="background: #1F497D; color: white; border: none; border-radius: 8px; padding: 6px 12px; font-size: 11px; font-weight: 600; cursor: pointer; align-self: flex-start;">Enviar</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Chips abaixo do campo</h3>
+      <p>Quando você digita "@", os chips de usuário aparecem abaixo do campo. Clique num chip para inserir o @nome no texto.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top: 1.5rem;">Clique para selecionar a opção preferida, depois responda no terminal.</p>
