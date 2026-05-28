@@ -23,10 +23,17 @@ export function useBoard(workspace) {
 
     const taskQ = query(
       collection(db, 'workspaces', workspace, 'tasks'),
-      orderBy('order'), orderBy('createdAt')
+      orderBy('createdAt')
     )
     const unsubTasks = onSnapshot(taskQ, snap => {
-      setTasks(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      docs.sort((a, b) => {
+        const aOrder = a.order ?? Infinity
+        const bOrder = b.order ?? Infinity
+        if (aOrder !== bOrder) return aOrder - bOrder
+        return (a.createdAt?.seconds ?? 0) - (b.createdAt?.seconds ?? 0)
+      })
+      setTasks(docs)
       setLoading(false)
     })
 
