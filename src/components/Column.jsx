@@ -22,7 +22,7 @@ export default function Column({ column, tasks, onTaskClick, onAddTask, isReview
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 flex flex-col gap-2 min-h-[120px] rounded-xl p-2 shadow-sm transition-colors ${
+            className={`flex flex-col gap-2 min-h-[120px] rounded-xl p-2 shadow-sm transition-colors ${
               isReview
                 ? 'bg-blue-50'
                 : snapshot.isDraggingOver

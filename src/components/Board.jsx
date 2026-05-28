@@ -43,7 +43,7 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto p-4 sm:p-5 h-full">
+      <div className="flex gap-4 overflow-auto p-4 sm:p-5 h-full items-start">
         {columns.map(col => (
           <Column
             key={col.id}
@@ -52,7 +52,7 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
             onTaskClick={onTaskClick}
             onAddTask={onAddTask}
             isReview={col.name === REVIEW_COLUMN_NAME}
-            className={col.id !== activeColumnId ? 'hidden sm:block' : ''}
+            className={col.id !== activeColumnId ? 'hidden sm:flex sm:flex-col' : ''}
             users={users}
           />
         ))}
