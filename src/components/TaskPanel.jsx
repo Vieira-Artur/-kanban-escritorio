@@ -212,7 +212,13 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
 
             {/* Comments — only on existing tasks */}
             {!isNew && (
-              <CommentSection workspace={workspace} taskId={task.id} currentUser={currentUser} />
+              <CommentSection
+                workspace={workspace}
+                taskId={task.id}
+                taskTitle={task.title}
+                currentUser={currentUser}
+                users={users}
+              />
             )}
           </div>
 
