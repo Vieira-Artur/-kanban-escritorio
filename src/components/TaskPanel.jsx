@@ -27,6 +27,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
     opposingParty:  task?.opposingParty  ?? '',
     processNumber:  task?.processNumber  ?? '',
     columnId:       task?.columnId       ?? columnId ?? columns[0]?.id ?? '',
+    assignedTo:     task?.assignedTo     ?? '',
   })
 
   const { comments, loading, save, remove } = useTask(workspace, task?.id)
@@ -210,16 +211,6 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
               />
             </div>
 
-            {/* Comments — only on existing tasks */}
-            {!isNew && (
-              <CommentSection
-                workspace={workspace}
-                taskId={task.id}
-                taskTitle={task.title}
-                currentUser={currentUser}
-                users={users}
-              />
-            )}
           </div>
 
           {/* Footer */}
@@ -242,6 +233,19 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
             )}
           </div>
         </form>
+
+        {/* Comments — seção separada abaixo do formulário */}
+        {!isNew && (
+          <div className="shrink-0 border-t border-gray-100 px-5 py-4 bg-gray-50 overflow-y-auto max-h-64">
+            <CommentSection
+              workspace={workspace}
+              taskId={task.id}
+              taskTitle={task.title}
+              currentUser={currentUser}
+              users={users}
+            />
+          </div>
+        )}
       </div>
     </>
   )
