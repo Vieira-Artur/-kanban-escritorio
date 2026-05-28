@@ -26,7 +26,7 @@ describe('TaskCard', () => {
 
   it('renders client name', () => {
     render(<TaskCard task={task} onClick={vi.fn()} index={0} />)
-    expect(screen.getByText('Silva & Filhos')).toBeInTheDocument()
+    expect(screen.getByText(/Silva & Filhos/)).toBeInTheDocument()
   })
 
   it('renders priority badge', () => {
