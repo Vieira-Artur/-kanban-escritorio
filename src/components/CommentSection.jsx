@@ -26,6 +26,7 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
   const { comments } = useTask(workspace, taskId)
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
   const [mentionedUids, setMentionedUids] = useState(new Set())
   const [showChips, setShowChips] = useState(false)
 
@@ -45,6 +46,7 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
     e.preventDefault()
     if (!text.trim()) return
     setSending(true)
+    setError('')
     try {
       await addComment(workspace, taskId, {
         text: text.trim(),
@@ -74,6 +76,8 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
       setText('')
       setMentionedUids(new Set())
       setShowChips(false)
+    } catch (err) {
+      setError('Erro ao salvar comentário: ' + (err?.message ?? err))
     } finally {
       setSending(false)
     }
@@ -125,6 +129,10 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
             Enviar
           </button>
         </div>
+
+        {error && (
+          <p className="text-xs text-red-600 mt-1">{error}</p>
+        )}
 
         {showChips && users.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2">
