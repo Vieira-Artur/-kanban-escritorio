@@ -3,8 +3,19 @@ import { useTask } from '../hooks/useTask.js'
 import { addComment } from '../utils/firestore.js'
 import { sendMentionEmail } from '../utils/emailService.js'
 
-function renderText(text) {
-  return text.split(/(@\S+)/g).map((part, i) =>
+function renderText(text, users = []) {
+  if (!users.length) {
+    return text.split(/(@\S+)/g).map((part, i) =>
+      part.startsWith('@')
+        ? <span key={i} className="bg-blue-100 text-blue-700 rounded px-1 font-semibold text-xs">{part}</span>
+        : part
+    )
+  }
+  const escaped = users
+    .map(u => u.displayName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .sort((a, b) => b.length - a.length)
+  const pattern = new RegExp(`(@(?:${escaped.join('|')}))`, 'g')
+  return text.split(pattern).map((part, i) =>
     part.startsWith('@')
       ? <span key={i} className="bg-blue-100 text-blue-700 rounded px-1 font-semibold text-xs">{part}</span>
       : part
@@ -42,17 +53,22 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
         authorPhoto: currentUser.photoURL,
       })
 
-      const emailPromises = [...mentionedUids].map(uid => {
-        const user = users.find(u => u.uid === uid)
-        if (!user) return Promise.resolve()
-        return sendMentionEmail({
-          toEmail:     user.email,
-          toName:      user.displayName,
-          fromName:    currentUser.displayName,
-          taskTitle,
-          commentText: text.trim(),
+      const trimmed = text.trim()
+      const emailPromises = [...mentionedUids]
+        .filter(uid => {
+          const user = users.find(u => u.uid === uid)
+          return user && trimmed.includes(`@${user.displayName}`)
         })
-      })
+        .map(uid => {
+          const user = users.find(u => u.uid === uid)
+          return sendMentionEmail({
+            toEmail:     user.email,
+            toName:      user.displayName,
+            fromName:    currentUser.displayName,
+            taskTitle,
+            commentText: trimmed,
+          })
+        })
       Promise.all(emailPromises).catch(err => console.warn('EmailJS error:', err))
 
       setText('')
@@ -87,7 +103,7 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
                     : ''}
                 </span>
               </div>
-              <p className="text-xs text-gray-700 mt-0.5">{renderText(c.text)}</p>
+              <p className="text-xs text-gray-700 mt-0.5">{renderText(c.text, users)}</p>
             </div>
           </div>
         ))}
