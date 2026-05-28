@@ -34,3 +34,19 @@ describe('TaskCard', () => {
     expect(screen.getByText('Alta')).toBeInTheDocument()
   })
 })
+
+const users = [
+  { uid: 'user1', displayName: 'Artur Vieira', email: 'a@test.com', photoURL: '' },
+]
+
+describe('TaskCard — responsável', () => {
+  it('exibe as iniciais do responsável no rodapé', () => {
+    render(<TaskCard task={task} onClick={vi.fn()} index={0} users={users} />)
+    expect(screen.getByTitle('Artur Vieira')).toBeInTheDocument()
+  })
+
+  it('não quebra quando users está vazio', () => {
+    render(<TaskCard task={task} onClick={vi.fn()} index={0} users={[]} />)
+    expect(screen.getByText('Recurso trabalhista')).toBeInTheDocument()
+  })
+})

@@ -1,9 +1,13 @@
 import { Draggable } from '@hello-pangea/dnd'
 import { formatDate, priorityLabel, priorityColor, isOverdue } from '../utils/formatters.js'
 
-export default function TaskCard({ task, onClick, index }) {
+export default function TaskCard({ task, onClick, index, users = [] }) {
   const deadlineMs = task.deadline?.toMillis?.() ?? task.deadline
   const overdue = isOverdue(deadlineMs)
+  const assignee = users.find(u => u.uid === task.assignedTo)
+  function initials(name) {
+    return name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() ?? '?'
+  }
 
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -49,8 +53,19 @@ export default function TaskCard({ task, onClick, index }) {
               {priorityLabel(task.priority)}
             </span>
             {task.deadline && (
-              <span className={`text-xs ml-auto ${overdue ? 'text-red-600 font-semibold' : 'text-gray-400'}`}>
+              <span className={`text-xs ${assignee ? '' : 'ml-auto'} ${overdue ? 'text-red-600 font-semibold' : 'text-gray-400'}`}>
                 📅 {formatDate(deadlineMs)}
+              </span>
+            )}
+            {assignee && (
+              <span
+                title={assignee.displayName}
+                className="ml-auto flex items-center justify-center w-5 h-5 rounded-full bg-brand-900 text-white text-[9px] font-bold shrink-0 overflow-hidden"
+              >
+                {assignee.photoURL
+                  ? <img src={assignee.photoURL} alt={assignee.displayName} className="w-full h-full object-cover" />
+                  : initials(assignee.displayName)
+                }
               </span>
             )}
           </div>
