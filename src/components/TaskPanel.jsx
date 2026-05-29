@@ -38,18 +38,26 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
 
   async function handleSubmit(e) {
     e.preventDefault()
-    await save({
-      ...form,
-      deadline: form.deadline ? new Date(form.deadline).getTime() : null,
-      isIntern: form.isIntern,
-    })
-    onClose()
+    try {
+      await save({
+        ...form,
+        deadline: form.deadline ? new Date(form.deadline).getTime() : null,
+        isIntern: form.isIntern,
+      })
+      onClose()
+    } catch {
+      // toast already shown by useTask
+    }
   }
 
   async function handleDelete() {
     if (!confirm('Excluir esta tarefa? Esta ação não pode ser desfeita.')) return
-    await remove()
-    onClose()
+    try {
+      await remove()
+      onClose()
+    } catch {
+      // toast already shown by useTask
+    }
   }
 
   return (

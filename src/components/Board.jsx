@@ -2,12 +2,15 @@ import { DragDropContext } from '@hello-pangea/dnd'
 import emailjs from '@emailjs/browser'
 import Column from './Column.jsx'
 import { moveTask, reorderTasks } from '../utils/firestore.js'
+import { useToast } from '../context/ToastContext.jsx'
 
 const EMAILJS_SERVICE  = 'service_15ksn4c'
 const EMAILJS_TEMPLATE = 'template_ex0jp91'
 const EMAILJS_KEY      = 'oS_35Exr1g3iWgdJC'
 
 export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUser, activeColumnId, users }) {
+  const { addToast } = useToast()
+
   async function handleDragEnd(result) {
     const { destination, source, draggableId } = result
     if (!destination) return
@@ -18,11 +21,20 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
       const reordered = [...colTasks]
       const [moved] = reordered.splice(source.index, 1)
       reordered.splice(destination.index, 0, moved)
-      await reorderTasks(workspace, reordered.map(t => t.id))
+      try {
+        await reorderTasks(workspace, reordered.map(t => t.id))
+      } catch {
+        addToast('Não foi possível reordenar as tarefas. Tente novamente.')
+      }
       return
     }
 
-    await moveTask(workspace, draggableId, destination.droppableId)
+    try {
+      await moveTask(workspace, draggableId, destination.droppableId)
+    } catch {
+      addToast('Não foi possível mover a tarefa. Tente novamente.')
+      return
+    }
 
     const destColumn = columns.find(c => c.id === destination.droppableId)
     if (destColumn?.name === 'Aguardando Revisão') {

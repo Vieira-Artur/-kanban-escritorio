@@ -3,6 +3,8 @@ import { useAuth } from './hooks/useAuth.js'
 import LoginPage from './components/LoginPage.jsx'
 import AccessDenied from './components/AccessDenied.jsx'
 import BoardSkeleton from './components/BoardSkeleton.jsx'
+import Toasts from './components/Toasts.jsx'
+import { ToastProvider } from './context/ToastContext.jsx'
 
 import { lazy, Suspense } from 'react'
 const BoardPage = lazy(() => import('./pages/BoardPage.jsx'))
@@ -22,9 +24,11 @@ function AuthGuard({ children, requireAdmin = false }) {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/-kanban-escritorio">
-      <Suspense fallback={<BoardSkeleton />}>
-        <Routes>
+    <ToastProvider>
+      <BrowserRouter basename="/-kanban-escritorio">
+        <Toasts />
+        <Suspense fallback={<BoardSkeleton />}>
+          <Routes>
           <Route path="/" element={
             <AuthGuard>
               <BoardPage />
@@ -35,8 +39,9 @@ export default function App() {
               <AdminPage />
             </AuthGuard>
           } />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ToastProvider>
   )
 }
