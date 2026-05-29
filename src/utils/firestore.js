@@ -109,6 +109,21 @@ export async function addComment(workspace, taskId, { text, authorId, authorName
   })
 }
 
+// ── Checklist Templates ──────────────────────────────────────────────────────
+
+export async function saveChecklistTemplate(name, items) {
+  return addDoc(collection(db, 'checklistTemplates'), {
+    name,
+    items: items.map(i => ({ text: i.text })),
+    createdAt: serverTimestamp(),
+  })
+}
+
+export async function getChecklistTemplates() {
+  const snap = await getDocs(query(collection(db, 'checklistTemplates'), orderBy('name')))
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
 // ── User profile ─────────────────────────────────────────────────────────────
 
 export async function getUsers() {

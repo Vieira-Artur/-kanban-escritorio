@@ -6,6 +6,10 @@ export default function TaskCard({ task, onClick, index, users = [] }) {
   const overdue = isOverdue(deadlineMs)
   const days = daysUntilDeadline(deadlineMs)
   const assignee = users.find(u => u.uid === task.assignedTo)
+  const checklist     = task.checklist ?? []
+  const checklistDone = checklist.filter(i => i.done).length
+  const checklistAll  = checklist.length
+
   function initials(name) {
     return name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() ?? '?'
   }
@@ -47,6 +51,23 @@ export default function TaskCard({ task, onClick, index, users = [] }) {
               👤 {assignee?.displayName ?? (task.isIntern ? 'Estagiário' : 'Artur Vieira')}
             </span>
           </div>
+
+          {/* Checklist progress */}
+          {checklistAll > 0 && (
+            <div className="mb-2">
+              <div className="flex items-center justify-between mb-1">
+                <span className={`text-[10px] font-semibold ${checklistDone === checklistAll ? 'text-green-600' : 'text-gray-400'}`}>
+                  ✓ {checklistDone}/{checklistAll}
+                </span>
+              </div>
+              <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${checklistDone === checklistAll ? 'bg-green-500' : 'bg-brand-900'}`}
+                  style={{ width: `${(checklistDone / checklistAll) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Footer */}
           <div className="flex items-center gap-2 mt-1 pt-2 border-t border-gray-50">

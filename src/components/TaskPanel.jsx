@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTask } from '../hooks/useTask.js'
 import { formatDate } from '../utils/formatters.js'
 import CommentSection from './CommentSection.jsx'
+import { saveChecklistTemplate, getChecklistTemplates } from '../utils/firestore.js'
 
 const CLIENTS = ['Vereda', 'Sergio', 'Loppas', 'Aliria']
 
@@ -28,12 +29,60 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
     processNumber:  task?.processNumber  ?? '',
     columnId:       task?.columnId       ?? columnId ?? columns[0]?.id ?? '',
     assignedTo:     task?.assignedTo     ?? '',
+    checklist:      task?.checklist      ?? [],
   })
+
+  const [newItem, setNewItem]           = useState('')
+  const [templates, setTemplates]       = useState([])
+  const [templateName, setTemplateName] = useState('')
+  const [savingTpl, setSavingTpl]       = useState(false)
 
   const { comments, loading, save, remove } = useTask(workspace, task?.id)
 
+  useEffect(() => {
+    getChecklistTemplates().then(setTemplates).catch(() => {})
+  }, [])
+
   function set(field) {
     return e => setForm(f => ({ ...f, [field]: e.target.value }))
+  }
+
+  function addChecklistItem() {
+    if (!newItem.trim()) return
+    setForm(f => ({
+      ...f,
+      checklist: [...f.checklist, { id: crypto.randomUUID(), text: newItem.trim(), done: false }],
+    }))
+    setNewItem('')
+  }
+
+  function removeChecklistItem(id) {
+    setForm(f => ({ ...f, checklist: f.checklist.filter(i => i.id !== id) }))
+  }
+
+  function toggleChecklistItem(id) {
+    setForm(f => ({
+      ...f,
+      checklist: f.checklist.map(i => i.id === id ? { ...i, done: !i.done } : i),
+    }))
+  }
+
+  async function handleSaveTemplate() {
+    if (!templateName.trim() || !form.checklist.length) return
+    await saveChecklistTemplate(templateName.trim(), form.checklist)
+    const updated = await getChecklistTemplates()
+    setTemplates(updated)
+    setTemplateName('')
+    setSavingTpl(false)
+  }
+
+  function loadTemplate(id) {
+    const tpl = templates.find(t => t.id === id)
+    if (!tpl) return
+    setForm(f => ({
+      ...f,
+      checklist: tpl.items.map(i => ({ id: crypto.randomUUID(), text: i.text, done: false })),
+    }))
   }
 
   async function handleSubmit(e) {
@@ -217,6 +266,112 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                 placeholder="Detalhes, instrução para o estagiário..."
                 className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-900/20 resize-none"
               />
+            </div>
+
+            {/* Checklist */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-gray-500">
+                  ✅ Checklist
+                  {form.checklist.length > 0 && (
+                    <span className="ml-2 text-gray-400 font-normal">
+                      {form.checklist.filter(i => i.done).length} de {form.checklist.length}
+                    </span>
+                  )}
+                </span>
+                <div className="flex items-center gap-2">
+                  {templates.length > 0 && (
+                    <select
+                      defaultValue=""
+                      onChange={e => { loadTemplate(e.target.value); e.target.value = '' }}
+                      className="text-xs border border-gray-200 rounded px-2 py-1 text-gray-500 focus:outline-none"
+                    >
+                      <option value="" disabled>Carregar template</option>
+                      {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                    </select>
+                  )}
+                  {form.checklist.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setSavingTpl(v => !v)}
+                      className="text-xs text-gray-400 hover:text-gray-600"
+                    >
+                      Salvar template
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {savingTpl && (
+                <div className="flex gap-2 mb-2">
+                  <input
+                    autoFocus
+                    value={templateName}
+                    onChange={e => setTemplateName(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSaveTemplate()}
+                    placeholder="Nome do template..."
+                    className="flex-1 text-xs border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveTemplate}
+                    className="text-xs bg-brand-900 text-white px-2 py-1.5 rounded hover:bg-blue-800"
+                  >
+                    Salvar
+                  </button>
+                </div>
+              )}
+
+              {form.checklist.length > 0 && (
+                <div className="mb-2">
+                  <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-green-500 rounded-full transition-all"
+                      style={{ width: `${(form.checklist.filter(i => i.done).length / form.checklist.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-1 mb-2">
+                {form.checklist.map(item => (
+                  <div key={item.id} className="flex items-center gap-2 group">
+                    <input
+                      type="checkbox"
+                      checked={item.done}
+                      onChange={() => toggleChecklistItem(item.id)}
+                      className="w-3.5 h-3.5 rounded accent-brand-900 shrink-0"
+                    />
+                    <span className={`flex-1 text-sm ${item.done ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                      {item.text}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeChecklistItem(item.id)}
+                      className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs leading-none"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  value={newItem}
+                  onChange={e => setNewItem(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addChecklistItem())}
+                  placeholder="Adicionar item..."
+                  className="flex-1 text-xs border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-900/20"
+                />
+                <button
+                  type="button"
+                  onClick={addChecklistItem}
+                  className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded transition-colors"
+                >
+                  +
+                </button>
+              </div>
             </div>
 
           </div>
