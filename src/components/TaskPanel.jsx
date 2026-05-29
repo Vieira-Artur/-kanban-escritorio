@@ -172,7 +172,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
           <h2 className="text-sm font-bold text-gray-800">
             {isNew ? 'Nova tarefa' : 'Editar tarefa'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-lg leading-none">✕</button>
+          <button onClick={onClose} aria-label="Fechar painel" className="text-gray-400 hover:text-gray-700 text-lg leading-none">✕</button>
         </div>
 
         {/* Form */}

@@ -47,6 +47,7 @@ export default function TopBar({ workspace, onWorkspaceChange, onSearch, user, i
       <div className="relative">
         <button
           onClick={() => setMenuOpen(o => !o)}
+          aria-label="Abrir menu do usuário"
           className="w-8 h-8 rounded-full bg-white/20 text-white text-xs font-bold flex items-center justify-center overflow-hidden"
         >
           {user?.photoURL

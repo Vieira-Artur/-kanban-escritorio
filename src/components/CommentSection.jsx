@@ -141,6 +141,7 @@ export default function CommentSection({ workspace, taskId, taskTitle, currentUs
                 key={u.uid}
                 type="button"
                 onClick={() => handleChipClick(u)}
+                aria-label={`Mencionar ${u.displayName}`}
                 className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors"
               >
                 <span className="w-4 h-4 rounded-full bg-brand-900 text-white text-[8px] font-bold flex items-center justify-center shrink-0">
