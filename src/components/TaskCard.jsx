@@ -44,7 +44,7 @@ export default function TaskCard({ task, onClick, index, users = [] }) {
               </span>
             )}
             <span className="text-xs font-semibold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">
-              👤 {task.isIntern ? 'Estagiário' : 'Artur Vieira'}
+              👤 {assignee?.displayName ?? (task.isIntern ? 'Estagiário' : 'Artur Vieira')}
             </span>
           </div>
 
