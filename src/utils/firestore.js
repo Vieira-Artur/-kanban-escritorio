@@ -109,6 +109,13 @@ export async function addComment(workspace, taskId, { text, authorId, authorName
   })
 }
 
+// ── History ──────────────────────────────────────────────────────────────────
+
+export async function addHistory(workspace, taskId, { authorId, authorName, description }) {
+  const ref = collection(db, 'workspaces', workspace, 'tasks', taskId, 'history')
+  return addDoc(ref, { authorId, authorName, description, createdAt: serverTimestamp() })
+}
+
 // ── Checklist Templates ──────────────────────────────────────────────────────
 
 export async function saveChecklistTemplate(name, items) {

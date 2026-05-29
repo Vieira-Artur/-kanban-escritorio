@@ -1,7 +1,7 @@
 import { DragDropContext } from '@hello-pangea/dnd'
 import emailjs from '@emailjs/browser'
 import Column from './Column.jsx'
-import { moveTask, reorderTasks } from '../utils/firestore.js'
+import { moveTask, reorderTasks, addHistory } from '../utils/firestore.js'
 import { useToast } from '../context/ToastContext.jsx'
 
 const EMAILJS_SERVICE  = 'service_15ksn4c'
@@ -36,7 +36,15 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
       return
     }
 
+    const srcColumn  = columns.find(c => c.id === source.droppableId)
     const destColumn = columns.find(c => c.id === destination.droppableId)
+
+    addHistory(workspace, draggableId, {
+      authorId:    currentUser?.uid ?? 'sistema',
+      authorName:  currentUser?.displayName ?? 'Sistema',
+      description: `moveu para "${destColumn?.name ?? '?'}"`,
+    }).catch(() => {})
+
     if (destColumn?.name === 'Aguardando Revisão') {
       const task = tasksForColumn(source.droppableId).find(t => t.id === draggableId)
       emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {

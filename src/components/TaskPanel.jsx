@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTask } from '../hooks/useTask.js'
 import { formatDate } from '../utils/formatters.js'
 import CommentSection from './CommentSection.jsx'
-import { saveChecklistTemplate, getChecklistTemplates } from '../utils/firestore.js'
+import { saveChecklistTemplate, getChecklistTemplates, addHistory } from '../utils/firestore.js'
 
 const CLIENTS = ['Vereda', 'Sergio', 'Loppas', 'Aliria']
 
@@ -36,8 +36,50 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
   const [templates, setTemplates]       = useState([])
   const [templateName, setTemplateName] = useState('')
   const [savingTpl, setSavingTpl]       = useState(false)
+  const [showHistory, setShowHistory]   = useState(false)
 
-  const { comments, loading, save, remove } = useTask(workspace, task?.id)
+  const { comments, history, loading, save, remove } = useTask(workspace, task?.id)
+
+  function fmtHistoryDate(ts) {
+    if (!ts?.toDate) return ''
+    const d = ts.toDate()
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) +
+      ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  }
+
+  function computeChanges() {
+    if (!task) return []
+    const changes = []
+    const PRIORITY_LABEL = { alta: 'Alta', media: 'Média', baixa: 'Baixa' }
+
+    if (form.columnId !== task.columnId) {
+      const oldCol = columns.find(c => c.id === task.columnId)
+      const newCol = columns.find(c => c.id === form.columnId)
+      changes.push(`moveu para "${newCol?.name ?? '?'}" (antes: "${oldCol?.name ?? '?'}")`)
+    }
+    if (form.priority !== task.priority) {
+      changes.push(`alterou a prioridade para ${PRIORITY_LABEL[form.priority]}`)
+    }
+    const oldDeadline = task.deadline
+      ? new Date(task.deadline?.toMillis?.() ?? task.deadline).toLocaleDateString('pt-BR')
+      : null
+    const newDeadline = form.deadline
+      ? new Date(form.deadline).toLocaleDateString('pt-BR')
+      : null
+    if (oldDeadline !== newDeadline) {
+      if (!newDeadline)      changes.push('removeu o prazo')
+      else if (!oldDeadline) changes.push(`definiu prazo para ${newDeadline}`)
+      else                   changes.push(`alterou prazo para ${newDeadline}`)
+    }
+    if (form.client !== (task.client ?? '')) {
+      changes.push(`alterou o cliente para "${form.client}"`)
+    }
+    if (form.assignedTo !== (task.assignedTo ?? '')) {
+      const newUser = users.find(u => u.uid === form.assignedTo)
+      changes.push(`atribuiu para ${newUser?.displayName ?? 'desconhecido'}`)
+    }
+    return changes
+  }
 
   useEffect(() => {
     getChecklistTemplates().then(setTemplates).catch(() => {})
@@ -87,12 +129,21 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
 
   async function handleSubmit(e) {
     e.preventDefault()
+    const changes = computeChanges()
     try {
-      await save({
+      const savedId = await save({
         ...form,
         deadline: form.deadline ? new Date(form.deadline).getTime() : null,
         isIntern: form.isIntern,
       })
+      const author = { authorId: currentUser?.uid ?? 'sistema', authorName: currentUser?.displayName ?? 'Sistema' }
+      if (isNew) {
+        addHistory(workspace, savedId, { ...author, description: 'criou a tarefa' }).catch(() => {})
+      } else {
+        changes.forEach(description =>
+          addHistory(workspace, savedId, { ...author, description }).catch(() => {})
+        )
+      }
       onClose()
     } catch {
       // toast already shown by useTask
@@ -397,7 +448,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
           </div>
         </form>
 
-        {/* Comments — seção separada abaixo do formulário */}
+        {/* Comments */}
         {!isNew && (
           <div className="shrink-0 border-t border-gray-100 px-5 py-4 bg-gray-50 overflow-y-auto max-h-64">
             <CommentSection
@@ -407,6 +458,39 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
               currentUser={currentUser}
               users={users}
             />
+          </div>
+        )}
+
+        {/* History */}
+        {!isNew && (
+          <div className="shrink-0 border-t border-gray-100 px-5 py-3 bg-white">
+            <button
+              type="button"
+              onClick={() => setShowHistory(v => !v)}
+              className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <span>🕐 Histórico</span>
+              {history.length > 0 && <span className="text-gray-300">({history.length})</span>}
+              <span className="ml-1">{showHistory ? '▲' : '▼'}</span>
+            </button>
+
+            {showHistory && (
+              <div className="mt-3 space-y-2 max-h-48 overflow-y-auto">
+                {history.length === 0 && (
+                  <p className="text-xs text-gray-400">Nenhum registro ainda.</p>
+                )}
+                {[...history].reverse().map(h => (
+                  <div key={h.id} className="flex items-start gap-2 text-xs">
+                    <span className="text-gray-300 mt-0.5 shrink-0">•</span>
+                    <span className="text-gray-600 flex-1">
+                      <span className="font-semibold text-gray-700">{h.authorName}</span>
+                      {' '}{h.description}
+                    </span>
+                    <span className="text-gray-400 shrink-0 tabular-nums">{fmtHistoryDate(h.createdAt)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

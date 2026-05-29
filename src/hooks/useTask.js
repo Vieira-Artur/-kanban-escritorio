@@ -6,7 +6,8 @@ import { useToast } from '../context/ToastContext.jsx'
 
 export function useTask(workspace, taskId) {
   const [comments, setComments] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [history,  setHistory]  = useState([])
+  const [loading,  setLoading]  = useState(false)
   const { addToast } = useToast()
 
   useEffect(() => {
@@ -20,13 +21,26 @@ export function useTask(workspace, taskId) {
     })
   }, [workspace, taskId])
 
+  useEffect(() => {
+    if (!workspace || !taskId) return
+    const q = query(
+      collection(db, 'workspaces', workspace, 'tasks', taskId, 'history'),
+      orderBy('createdAt')
+    )
+    return onSnapshot(q, snap => {
+      setHistory(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+    })
+  }, [workspace, taskId])
+
   async function save(data) {
     setLoading(true)
     try {
       if (taskId) {
         await updateTask(workspace, taskId, data)
+        return taskId
       } else {
-        await createTask(workspace, data)
+        const ref = await createTask(workspace, data)
+        return ref.id
       }
     } catch {
       addToast('Não foi possível salvar a tarefa. Tente novamente.')
@@ -45,5 +59,5 @@ export function useTask(workspace, taskId) {
     }
   }
 
-  return { comments, loading, save, remove }
+  return { comments, history, loading, save, remove }
 }
