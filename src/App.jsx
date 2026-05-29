@@ -7,6 +7,7 @@ import Toasts from './components/Toasts.jsx'
 import { ToastProvider } from './context/ToastContext.jsx'
 
 import { lazy, Suspense } from 'react'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 const BoardPage = lazy(() => import('./pages/BoardPage.jsx'))
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
 
@@ -27,20 +28,22 @@ export default function App() {
     <ToastProvider>
       <BrowserRouter basename="/-kanban-escritorio">
         <Toasts />
-        <Suspense fallback={<BoardSkeleton />}>
-          <Routes>
-          <Route path="/" element={
-            <AuthGuard>
-              <BoardPage />
-            </AuthGuard>
-          } />
-          <Route path="/admin" element={
-            <AuthGuard requireAdmin>
-              <AdminPage />
-            </AuthGuard>
-          } />
-          </Routes>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<BoardSkeleton />}>
+            <Routes>
+              <Route path="/" element={
+                <AuthGuard>
+                  <BoardPage />
+                </AuthGuard>
+              } />
+              <Route path="/admin" element={
+                <AuthGuard requireAdmin>
+                  <AdminPage />
+                </AuthGuard>
+              } />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </BrowserRouter>
     </ToastProvider>
   )
