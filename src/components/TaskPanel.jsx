@@ -399,6 +399,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                     <button
                       type="button"
                       onClick={() => removeChecklistItem(item.id)}
+                      aria-label="Remover item do checklist"
                       className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs leading-none"
                     >
                       ✕
@@ -418,6 +419,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                 <button
                   type="button"
                   onClick={addChecklistItem}
+                  aria-label="Adicionar item ao checklist"
                   className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded transition-colors"
                 >
                   +
@@ -467,6 +469,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
             <button
               type="button"
               onClick={() => setShowHistory(v => !v)}
+              aria-label="Mostrar/ocultar histórico"
               className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors"
             >
               <span>🕐 Histórico</span>
