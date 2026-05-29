@@ -212,7 +212,7 @@ export default function TaskPanel({ workspace, task, columnId, columns, currentU
                     <input
                       type="checkbox"
                       checked={!form.deadline}
-                      onChange={e => setForm(f => ({ ...f, deadline: e.target.checked ? '' : new Date().toISOString().split('T')[0] }))}
+                      onChange={() => setForm(f => ({ ...f, deadline: '' }))}
                       className="rounded"
                     />
                     Sem prazo
