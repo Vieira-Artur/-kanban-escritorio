@@ -77,7 +77,7 @@ export default function BoardPage() {
           onAddTask={columnId => setCreatingInColumn(columnId)}
           filter={filter}
           searchQuery={searchQuery}
-          currentUserId={user?.uid}
+          currentUser={user}
           activeColumnId={resolvedActiveColumnId}
           users={users}
         />

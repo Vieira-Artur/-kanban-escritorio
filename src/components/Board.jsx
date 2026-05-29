@@ -1,8 +1,13 @@
 import { DragDropContext } from '@hello-pangea/dnd'
+import emailjs from '@emailjs/browser'
 import Column from './Column.jsx'
 import { moveTask, reorderTasks } from '../utils/firestore.js'
 
-export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUserId, activeColumnId, users }) {
+const EMAILJS_SERVICE  = 'service_15ksn4c'
+const EMAILJS_TEMPLATE = 'template_ex0jp91'
+const EMAILJS_KEY      = 'oS_35Exr1g3iWgdJC'
+
+export default function Board({ workspace, columns, tasksForColumn, onTaskClick, onAddTask, filter, searchQuery, currentUser, activeColumnId, users }) {
   async function handleDragEnd(result) {
     const { destination, source, draggableId } = result
     if (!destination) return
@@ -18,6 +23,21 @@ export default function Board({ workspace, columns, tasksForColumn, onTaskClick,
     }
 
     await moveTask(workspace, draggableId, destination.droppableId)
+
+    const destColumn = columns.find(c => c.id === destination.droppableId)
+    if (destColumn?.name === 'Aguardando Revisão') {
+      const task = tasksForColumn(source.droppableId).find(t => t.id === draggableId)
+      emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+        from_name:    currentUser?.displayName ?? 'Estagiário',
+        name:         currentUser?.displayName ?? 'Estagiário',
+        email:        currentUser?.email ?? '',
+        to_name:      'Artur',
+        to_email:     'arturapv@gmail.com',
+        task_title:   task?.title ?? '(sem título)',
+        comment_text: `Tarefa enviada para Aguardando Revisão${task?.client ? ` — cliente: ${task.client}` : ''}`,
+        app_url:      window.location.origin,
+      }, EMAILJS_KEY)
+    }
   }
 
   function getFilteredTasks(columnId) {
